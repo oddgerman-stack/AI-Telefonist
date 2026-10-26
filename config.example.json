@@ -1,0 +1,90 @@
+{
+  "business": {
+    "name": "Acme Bedrijf B.V.",
+    "phone": "+31 (0)20 123 4567",
+    "email": "info@acmebedrijf.nl",
+    "receptionist_name": "Sarah",
+    "opening_hours": "Maandag t/m Vrijdag van 08:30 tot 17:30 uur",
+    "default_language": "nl",
+    "greeting_nl": "Goedendag! Welkom bij Acme Bedrijf, u spreekt met Sarah. Waarmee kan ik u vandaag van dienst zijn?",
+    "greeting_en": "Good day! Welcome to Acme Company, you are speaking with Sarah. How may I assist you today?"
+  },
+  "pipeline": {
+    "sample_rate": 16000,
+    "vad": {
+      "model_path": "models/vad/silero_vad.onnx",
+      "threshold": 0.5,
+      "silence_duration_ms": 700,
+      "min_speech_duration_ms": 250
+    },
+    "asr": {
+      "engine": "faster-whisper",
+      "model_size": "large-v3-turbo",
+      "model_path": "models/whisper/large-v3-turbo",
+      "device": "auto",
+      "compute_type": "float16",
+      "default_language": "nl",
+      "supported_languages": ["nl", "en"]
+    },
+    "llm": {
+      "engine": "llama-server",
+      "api_url": "http://127.0.0.1:8080/v1/chat/completions",
+      "model_path": "models/llm/qwen2.5-7b-instruct-q4_k_m.gguf",
+      "server_bin": "bin/llama/llama-server.exe",
+      "n_gpu_layers": -1,
+      "ctx_size": 4096,
+      "temperature": 0.4
+    },
+    "tts": {
+      "engine": "piper",
+      "voice_nl": "models/piper/nl_NL-mls_7432-low.onnx",
+      "voice_nl_config": "models/piper/nl_NL-mls_7432-low.onnx.json",
+      "voice_en": "models/piper/en_US-amy-low.onnx",
+      "voice_en_config": "models/piper/en_US-amy-low.onnx.json",
+      "sample_rate": 22050
+    },
+    "chunker": {
+      "delimiters": [".", "?", "!", ",", ";", "\n", "—", ":"],
+      "min_tokens": 4,
+      "max_tokens": 25
+    }
+  },
+  "notifications": {
+    "smtp": {
+      "enabled": false,
+      "host": "smtp.example.com",
+      "port": 587,
+      "use_tls": true,
+      "username": "notifications@example.com",
+      "password": "",
+      "sender_email": "reception@example.com",
+      "recipient_email": "frontdesk@example.com"
+    },
+    "webhooks": {
+      "enabled": false,
+      "discord_url": "",
+      "slack_url": "",
+      "generic_webhook_url": ""
+    },
+    "calendar_sync": {
+      "google_calendar": {
+        "enabled": false,
+        "calendar_id": "primary",
+        "credentials_path": "config/google_credentials.json"
+      },
+      "cal_com": {
+        "enabled": false,
+        "api_key": "",
+        "event_type_id": ""
+      }
+    }
+  },
+  "storage": {
+    "appointments_file": "appointments.json"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "debug": false
+  }
+}

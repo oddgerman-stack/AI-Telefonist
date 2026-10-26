@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Build artifacts & PyInstaller
+build/
+dist/
+*.spec
+bin/llama/*.exe
+bin/llama/*.dll
+
+# Model weights (Do not track multi-gigabyte models in Git)
+models/**/*.onnx
+models/**/*.bin
+models/**/*.gguf
+models/**/*.pt
+models/**/*.safetensors
+!models/**/.gitkeep
+!bin/**/.gitkeep
+
+# Local user runtime data
+appointments.json
+config.json
+logs/
+*.log
+
+# IDE / OS files
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini

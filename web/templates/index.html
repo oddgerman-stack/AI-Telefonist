@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Telefonist • Autonome Virtuele Receptioniste</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>AI-Telefonist</h2>
+          <span class="version-tag">v{{ version }} Offline</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn active" data-tab="tab-console">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+          Live Console
+        </button>
+        <button class="nav-btn" data-tab="tab-appointments">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+          Afspraken & Intake
+        </button>
+        <button class="nav-btn" data-tab="tab-settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          Instellingen
+        </button>
+      </nav>
+
+      <div class="system-status-card">
+        <div class="status-indicator online">
+          <span class="ping-circle"></span>
+          <span class="status-text">100% Offline GPU Actief</span>
+        </div>
+        <p class="status-details">Dual-Language: <strong>NL (Standaard)</strong> & <strong>EN</strong></p>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-title">
+          <h1 id="page-title">Live Telefonie Console</h1>
+          <p id="page-subtitle">Real-time spraak-naar-spraak cascade (Silero VAD + Whisper + Qwen2.5 + Piper ONNX)</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="lang-badge">
+            <span class="badge-flag" id="current-lang-flag">🇳🇱</span>
+            <span id="current-lang-text">Nederlands</span>
+          </div>
+          <button id="btn-call-toggle" class="btn btn-primary pulse-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span id="call-toggle-label">Start Oproep (Mic)</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: LIVE CALL CONSOLE -->
+      <section id="tab-console" class="tab-pane active">
+        <div class="console-grid">
+          <!-- Left: Transcript & Audio Area -->
+          <div class="transcript-card">
+            <!-- Audio Visualizer -->
+            <div class="visualizer-container">
+              <canvas id="waveform-canvas" width="600" height="70"></canvas>
+              <div class="audio-state-tag" id="vad-tag">VAD: Standby</div>
+            </div>
+
+            <!-- Dialogue Feed -->
+            <div class="chat-feed" id="chat-feed">
+              <div class="chat-msg system">
+                <div class="msg-bubble">
+                  <strong>Sarah (AI-Telefonist):</strong> Systeem gereed. Klik op "Start Oproep" om via de microfoon te praten, of typ een testbericht hieronder.
+                </div>
+              </div>
+            </div>
+
+            <!-- Simulator Input Footer -->
+            <div class="chat-input-bar">
+              <input type="text" id="sim-input" placeholder="Typ een bericht om gesprek te simuleren (bijv. 'Ik wil morgen om 14 uur afspreken met Jan')...">
+              <button id="sim-send-btn" class="btn btn-secondary">Verstuur</button>
+            </div>
+          </div>
+
+          <!-- Right: Live Intake Extraction Card -->
+          <div class="intake-card">
+            <div class="intake-header">
+              <h3>Live Intake Gegevens</h3>
+              <span class="status-pill pending" id="intake-status-pill">In Afwachting</span>
+            </div>
+
+            <div class="intake-fields">
+              <div class="field-item">
+                <label>Naam Beller</label>
+                <div class="field-value" id="slot-name">—</div>
+              </div>
+              <div class="field-item">
+                <label>Bedrijfsnaam</label>
+                <div class="field-value" id="slot-company">—</div>
+              </div>
+              <div class="field-item">
+                <label>Telefoonnummer</label>
+                <div class="field-value" id="slot-phone">—</div>
+              </div>
+              <div class="field-item">
+                <label>E-mailadres</label>
+                <div class="field-value" id="slot-email">—</div>
+              </div>
+              <div class="field-item">
+                <label>Onderwerp / Reden</label>
+                <div class="field-value" id="slot-reason">—</div>
+              </div>
+              <div class="field-item highlight">
+                <label>Afspraakdatum & Tijd</label>
+                <div class="field-value" id="slot-time">—</div>
+              </div>
+            </div>
+
+            <div class="intake-actions">
+              <button id="btn-manual-confirm" class="btn btn-outline-success" disabled>
+                Direct Bevestigen & Notificeren
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: APPOINTMENTS DATABASE -->
+      <section id="tab-appointments" class="tab-pane">
+        <div class="appointments-view">
+          <div class="table-toolbar">
+            <div class="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="21" y1="21" y2="16.65"></line></svg>
+              <input type="text" id="appointment-search" placeholder="Zoek op naam, bedrijf, telefoon of datum...">
+            </div>
+            <div class="filter-group">
+              <button class="filter-pill active" data-filter="all">Alles</button>
+              <button class="filter-pill" data-filter="confirmed">Bevestigd</button>
+              <button class="filter-pill" data-filter="pending">In Afwachting</button>
+              <button class="filter-pill" data-filter="cancelled">Geannuleerd</button>
+            </div>
+            <button id="btn-refresh-appointments" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg>
+              Verversen
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Beller & Bedrijf</th>
+                  <th>Contactgegevens</th>
+                  <th>Afspraak Tijdstip</th>
+                  <th>Reden</th>
+                  <th>Status</th>
+                  <th>Acties</th>
+                </tr>
+              </thead>
+              <tbody id="appointments-tbody">
+                <tr><td colspan="6" class="loading-td">Afspraken laden...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: SETTINGS -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="settings-grid">
+          <!-- Business Profile Card -->
+          <div class="settings-card">
+            <h3>Bedrijfsprofiel</h3>
+            <div class="form-group">
+              <label>Bedrijfsnaam</label>
+              <input type="text" id="cfg-biz-name" value="{{ config.business.name }}">
+            </div>
+            <div class="form-group">
+              <label>Naam Receptioniste</label>
+              <input type="text" id="cfg-biz-receptionist" value="{{ config.business.receptionist_name }}">
+            </div>
+            <div class="form-group">
+              <label>Openingstijden</label>
+              <input type="text" id="cfg-biz-hours" value="{{ config.business.opening_hours }}">
+            </div>
+            <div class="form-group">
+              <label>Standaard Begroeting (NL)</label>
+              <textarea id="cfg-biz-greeting-nl" rows="2">{{ config.business.greeting_nl }}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Greeting (EN)</label>
+              <textarea id="cfg-biz-greeting-en" rows="2">{{ config.business.greeting_en }}</textarea>
+            </div>
+          </div>
+
+          <!-- Notification Settings Card -->
+          <div class="settings-card">
+            <h3>Multi-Channel Dispatcher (SMTP & Webhooks)</h3>
+            <div class="form-check">
+              <input type="checkbox" id="cfg-smtp-enabled" {% if config.notifications.smtp.enabled %}checked{% endif %}>
+              <label for="cfg-smtp-enabled">SMTP E-mail Notificaties Activeren</label>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-8">
+                <label>SMTP Host</label>
+                <input type="text" id="cfg-smtp-host" value="{{ config.notifications.smtp.host }}">
+              </div>
+              <div class="form-group col-4">
+                <label>Poort</label>
+                <input type="number" id="cfg-smtp-port" value="{{ config.notifications.smtp.port }}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>SMTP Gebruikersnaam</label>
+              <input type="text" id="cfg-smtp-user" value="{{ config.notifications.smtp.username }}">
+            </div>
+            <div class="form-group">
+              <label>Ontvanger E-mail</label>
+              <input type="email" id="cfg-smtp-recipient" value="{{ config.notifications.smtp.recipient_email }}">
+            </div>
+
+            <hr class="card-divider">
+
+            <div class="form-check">
+              <input type="checkbox" id="cfg-webhooks-enabled" {% if config.notifications.webhooks.enabled %}checked{% endif %}>
+              <label for="cfg-webhooks-enabled">Webhooks Activeren</label>
+            </div>
+            <div class="form-group">
+              <label>Discord Webhook URL</label>
+              <input type="url" id="cfg-webhook-discord" value="{{ config.notifications.webhooks.discord_url }}" placeholder="https://discord.com/api/webhooks/...">
+            </div>
+            <div class="form-group">
+              <label>Slack Webhook URL</label>
+              <input type="url" id="cfg-webhook-slack" value="{{ config.notifications.webhooks.slack_url }}" placeholder="https://hooks.slack.com/services/...">
+            </div>
+            <div class="form-group">
+              <label>n8n / Zapier Webhook URL</label>
+              <input type="url" id="cfg-webhook-generic" value="{{ config.notifications.webhooks.generic_webhook_url }}" placeholder="https://your-n8n.instance/webhook/...">
+            </div>
+          </div>
+
+          <!-- Hardware & Speech Model Card -->
+          <div class="settings-card">
+            <h3>Spraak & GPU Modellen</h3>
+            <div class="form-group">
+              <label>Faster-Whisper Model</label>
+              <input type="text" id="cfg-whisper-model" value="{{ config.pipeline.asr.model_size }}">
+            </div>
+            <div class="form-group">
+              <label>Compute Device</label>
+              <input type="text" id="cfg-whisper-device" value="{{ config.pipeline.asr.device }}" placeholder="auto, cuda, cpu">
+            </div>
+            <div class="form-group">
+              <label>Local LLM API URL</label>
+              <input type="text" id="cfg-llm-url" value="{{ config.pipeline.llm.api_url }}">
+            </div>
+            <div class="form-group">
+              <label>Piper Stem (Nederlands)</label>
+              <input type="text" id="cfg-piper-nl" value="{{ config.pipeline.tts.voice_nl }}">
+            </div>
+            <div class="form-group">
+              <label>Piper Voice (English)</label>
+              <input type="text" id="cfg-piper-en" value="{{ config.pipeline.tts.voice_en }}">
+            </div>
+
+            <div class="settings-save-bar">
+              <button id="btn-save-settings" class="btn btn-primary">Instellingen Opslaan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
